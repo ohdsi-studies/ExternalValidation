@@ -1,0 +1,65 @@
+covariateName,shortName
+"Cohort_covariate during day -99999 through -1 days relative to index:  [PL] All events of Deep Vein Thrombosis (DVT), with a washout period of 365 days  ",Deep vein thrombosis 
+"Cohort_covariate during day -99999 through -1 days relative to index:  [PL] All events of Seizure, with a washout period of 42 days  ",Seizure
+Cohort_covariate during day -99999 through -1 days relative to index:  [PL] Earliest occurrence of Heart failure  ,Heat failure
+"Cohort_covariate during day -99999 through -1 days relative to index:  [PL] All events of Non-hemorrhagic Stroke in an inpatient setting, with a washout period of 365 days  ",Non-hemorrhagic Stroke
+"Cohort_covariate during day -99999 through -1 days relative to index:  [PL] All events of Hemorrhagic stroke in an inpatient setting, with a washout period of 365 days  ",Hemorrhagic stroke
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] first peripheral vascular disease  ,Perifpheral vascular disease
+"Cohort_covariate during day -99999 through -1 days relative to index:  [ASSURE-C] aspirin exposures w 0d prior obsv, 30d gap  ",Aspirin
+Cohort_covariate during day -99999 through -1 days relative to index:  [EPI980] Angina events v2  ,Angina
+"Cohort_covariate during day -99999 through -1 days relative to index:  [ASSURE] Atrial Fibrillation, incident  ",Atrial fibrillation
+"Cohort_covariate during day -99999 through -1 days relative to index:  [PL] Earliest event of Major depressive disorder, with NO occurrence of certain psychiatric disorder  ",Major depressive disorder
+Cohort_covariate during day -99999 through -1 days relative to index:  [PL] Earliest event of Coronary artery disease (CAD)  ,Coronary artery disease
+"Cohort_covariate during day -99999 through -1 days relative to index:  [PL] All events of Acute Kidney Injury (AKI), with a washout period of 30 days  ",Acute kidney injury
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] First occurrence of Asthma  ,Asthma
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] First occurrence of Alcoholism  ,Alcoholism
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] Smoking  ,Smoking
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] First sleep apnea  ,Apnea
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] All occurrences of skin ulcer 365 washout  ,Skin ulcer
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] Earliest Chronic hepatitis  ,Hepatitis
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] First hyperlipidemia  ,Hyperlipidemia
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] First hypothyroidism  ,Hypothyroidism
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] Earliest Heart valve disorder  ,Heart valve disorder
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] First Low back pain  ,Low back pain
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] First occurrence of neuropathy  ,Neuropathy
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] All occurrences of Psychotic disorder  ,Psychotic
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] All occurrences of Sepsis 180 washout  ,Sepsis
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] Acute Respiratory failure  ,Respiratory failure
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] First Gastroesophageal reflux disease  , Gastroesophageal reflux disease
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] First obesity  ,Obesity
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] First Inflammatory Bowel Disease  ,Infalmmatory bowel disease
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] STEROIDS  ,Steroids
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] Opioids  ,Opioids
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] ANTIEPILEPTICS  ,Antiepileptics
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] First Osteoarthritis  ,Osteoarthritis
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] First Osteoporosis  ,Osteoporosis
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] Urinary tract infectious disease 30 day washout  ,Urinary tract infectious disease
+"Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] acetaminophen exposures w 0d prior obsv, 30d gap  ",Acetaminophen
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] All occurrences of Anemia  ,Anemia
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] First occurrence of Anxiety  ,Anxiety
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] HORMONAL CONTRACEPTIVES  ,Hormonal contraceptives
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] First chronic kidney disease or end stage renal disease  ,Chronic kidney disease
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] Earliest occurrence of chronic obstructive pulmonary disease (COPD)  ,Chronic obstructive pulmonary disease
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] Persons with new type 1 diabetes and no prior specific non-T1DM diabetes  ,Type 1 diabetes
+"Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] First Type 2 Diabetes Mellitus (DM), with no type 1 or secondary DM  ",Type 2 diabetes
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] All occurrences of Dyspnea  ,Dyspnea
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] All occurrences of Edema  ,Edema
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] All occurrences of Acute gastrointestinal (GI) bleeding  ,Acute gastrointestinal bleeding
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] First Hypertension  ,Hypertension
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotype] All occurrences of Pneumonia  ,Pneumonia
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] Earliest event of Rheumatoid Arthritis  ,Rheumatoid arthritis
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] Antibiotics Aminoglycosides  ,Aminoglycosides
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] Antibiotics Carbapenems  ,Carbapenems
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] Antibiotics Cephalosporins  ,Cephalosporins
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] Antibiotics Fluoroquinolones  ,Fluoroquinolones
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] Antibiotics Glycopeptides and lipoglycopeptides  ,Lipoglycopeptides
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] Antibiotics Macrolides  ,Macrolides
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] Antibiotics Monobactams  ,Monobactams
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] Antibiotics Oxazolidinones  ,Oxazolidinones
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] Antibiotics Penicillins  ,Penicillins
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] Antibiotics Polypeptides  ,Polypeptides
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] Antibiotics Rifamycins  ,Rifamycins
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] Antibiotics Sulfonamides  ,Sulfonamides
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] Antibiotics Streptogramins  ,Streptogramins
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] Antibiotics Tetracyclines  ,Tetracyclines
+Cohort_covariate during day -99999 through -1 days relative to index:  [Prediction phenotypes] Any cancer (excl. prostate cancer and benign cancer)  ,Cancer
