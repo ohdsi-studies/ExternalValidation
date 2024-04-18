@@ -37,7 +37,8 @@ analysesMap = data.frame(analysis=1:5, analysisName=c(
   'GI hemorrhage',
   'Insomnia'))
 
-for (metric in c('AUROC', 'brier score')) {
+# 'AUROC', 'brier score', 'calibrationInLarge mean prediction', 'calibrationInLarge observed risk'
+for (metric in c('AUROC', 'brier score', 'calibration')) { 
   
   allSummary <- summarizeAllExperiments(workDir, experimentDirs, dbs, metric)
   allResults <- merge(allSummary$results, analysesMap, by='analysis')

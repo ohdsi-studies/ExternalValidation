@@ -132,7 +132,19 @@ summarizeSingleExperiment <- function(internalName, analysisName, experimentDir,
         if (est$estimationResult$preDiagnosis$status == 'Success') {
           res$success <- T
           r <- read.csv(file.path(workDir, experimentDir, glue('{expName}.csv')))
-
+          #  
+          
+          if (metric == 'calibration') {
+            meanPredictionIdx <- r[['metric']] == "calibrationInLarge mean prediction"
+            observedRiskIdx <- r[['metric']] == "calibrationInLarge observed risk"
+            r1 <- r[meanPredictionIdx, ]
+            r2 <- r[observedRiskIdx, ]
+            rcols <- c("type", "targetId", "outcomeId", "internalDatabase", "externalDatabase", "analysis")
+            r <- merge(r1, r2, by = rcols)
+            r[['metric']] <- 'calibration'
+            r[['value']] <- abs(r[['value.x']] - r[['value.y']])
+          }
+          
           # TODO - check consistensy 
           internal <- r[['type']] == 'internal'
           external <- r[['type']] == 'external'
@@ -203,7 +215,7 @@ reshapeResults <- function(results) {
 #'    Where `type` is either int or est
 #' @param models a list of models
 #' @param name comparison name
-#' @param metric AUROC or brier score
+#' @param metric AUROC, brier score or calibration
 #' 
 plotRawResults <- function(workDir, results, models, name, metric) {
 
@@ -262,7 +274,7 @@ plotPerformenceDifference <- function(workDir, allResults, cname, metric)  {
   
   cResults[['Difference']] <- abs(cResults[['value.eval']] - cResults[['value.ext']])
   
-  ylabDict <- list(AUROC='AUROC', 'brier score'='Brier')
+  ylabDict <- list(AUROC='AUROC', 'brier score'='Brier', 'calibration'='Calibration')
   
   cResults %>%
     ggplot(aes(x=type, y=Difference, group=type, color = type)) +
@@ -272,7 +284,7 @@ plotPerformenceDifference <- function(workDir, allResults, cname, metric)  {
     ) + theme_bw() + 
     scale_y_continuous() +  # limits = c(0.65, 0.8)
     xlab('Estimation type') +
-    ylab(glue("|{ylabDict[metric]} Difference|")) + # 
+    ylab(TeX(glue("|$\\Delta$ {ylabDict[metric]}|"))) + # 
     geom_boxplot() +
     facet_grid(~internalDatabase) +
     theme(
