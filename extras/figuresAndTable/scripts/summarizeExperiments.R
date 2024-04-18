@@ -208,6 +208,8 @@ reshapeResults <- function(results) {
 plotRawResults <- function(workDir, results, models, name, metric) {
 
   results <- results[results[['Experiment']] %in% models, ]
+  
+  externalEvalIdx <- results[['externalDatabase']]!=results[['internalDatabase']]
 
   results %>%
     ggplot(aes(x=externalDatabase, y=value.ext, group=Experiment, color = Experiment)) +
@@ -218,9 +220,11 @@ plotRawResults <- function(workDir, results, models, name, metric) {
     scale_y_continuous() +  # limits = c(0.65, 0.8)
     xlab("External database") +
     ylab("External AUC") +
-    geom_point(shape = 5, size=1) +
-    geom_point(data = results[results[['type']]=='int', ], shape = 18, size=2) +
-    geom_point(mapping = aes(y=value.eval), shape = 4, size = 2, position = position_nudge(x = 0.25)) +  
+    geom_point(shape = 5, size=1) +  # empty diamonds
+    geom_point(data = results[results[['type']]=='int', ], shape = 18, size=2) +  # Filled diamonds
+    geom_point(
+      data = results[externalEvalIdx, ], mapping = aes(y=value.eval), shape = 4, size = 2, 
+      position = position_nudge(x = 0.25)) + # x  
     facet_grid(internalDatabase~analysisName) +
     # scale_color_brewer(palette = "Dark2") +
     theme(legend.position = "bottom", axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
@@ -252,6 +256,10 @@ plotFailedEstimations <- function(failedEstimations, models, name, metric) {
 
 plotPerformenceDifference <- function(workDir, allResults, cname, metric)  {
   cResults <- allResults[allResults[['Experiment']] %in% comparisons[[cname]], ]
+  
+  externalEvalIdx <- cResults[['externalDatabase']]!=cResults[['internalDatabase']]
+  cResults <- cResults[externalEvalIdx, ]
+  
   cResults[['Difference']] <- abs(cResults[['value.eval']] - cResults[['value.ext']])
   
   ylabDict <- list(AUROC='AUROC', 'brier score'='Brier')
@@ -275,8 +283,15 @@ plotPerformenceDifference <- function(workDir, allResults, cname, metric)  {
   cat('Saving', fileName, '\n')
   ggsave(fileName, width = 7, height = 1.5)
   
-  # pStats <- ddply(
-  #   cResults, .(type, internalDatabase), summarise, med = median(Difference), 
-  #   q25 = quantile(Difference, 0.25),
-  #   q75 = quantile(Difference, 0.75))
+  pStats <- ddply(
+    cResults, .(type, internalDatabase), summarise, med = median(Difference), 
+    q25 = quantile(Difference, 0.25),
+    q75 = quantile(Difference, 0.75))
+  cat(cname, metric, '\n')
+  if (metric == 'AUROC') {
+    pStats[ , c('med', 'q25', 'q75')] <- round(pStats[ , c('med', 'q25', 'q75')], 3)
+    print(pStats)
+  }
+  else
+    print(pStats)
 }
