@@ -4,6 +4,7 @@ script_dir <- dirname(rstudioapi::getSourceEditorContext()$path)
 setwd(script_dir)
 source('./summarizeExperiments.R')
 library(plyr)
+library(latex2exp)
 
 workDir <- 'C:/localdev/projects/robustness/rwe'
 
@@ -21,11 +22,11 @@ experimentDirs <- list(
 )
 
 comparisons <- list(
-  main = c('Age-Sex', 'LR', 'XGBoost','Full'),
-  ageSex = c('Age-Sex', 'age-sex-match50', 'age-sex-int-coef-n0'),
-  lr = c('LR', 'lr50-non-na'),
-  forest = c('XGBoost', 'rf50'),
-  fullModels = c('Full', 'full-match50', 'full-top100')
+  main = c('Age-Sex', 'LR', 'XGBoost','Full') # ,
+  # ageSex = c('Age-Sex', 'age-sex-match50', 'age-sex-int-coef-n0'),
+  # lr = c('LR', 'lr50-non-na'),
+  # forest = c('XGBoost', 'rf50'),
+  # fullModels = c('Full', 'full-match50', 'full-top100')
 )
 
 dbs <- c('ccae', 'mdcd', 'mdcr', 'optum ses', 'optum ehr')
@@ -37,11 +38,24 @@ analysesMap = data.frame(analysis=1:5, analysisName=c(
   'GI hemorrhage',
   'Insomnia'))
 
-# 'AUROC', 'brier score', 'calibrationInLarge mean prediction', 'calibrationInLarge observed risk'
+dbMap <- list(
+  'CCAE' = 'ccae',
+  'MDCD' = 'mdcd',
+  'MDCR' = 'mdcr',
+  'Optum EHR' = 'optum ehr',
+  'Optum CDM' = 'optum ses'
+)
+dbMap <- unlist(dbMap)
+
+
 for (metric in c('AUROC', 'brier score', 'calibration')) { 
   
   allSummary <- summarizeAllExperiments(workDir, experimentDirs, dbs, metric)
   allResults <- merge(allSummary$results, analysesMap, by='analysis')
+  
+  allResults$internalDatabase  <- names(dbMap)[match(allResults$internalDatabase, dbMap)]
+  allResults$externalDatabase  <- names(dbMap)[match(allResults$externalDatabase, dbMap)]
+  
   failedSummary <- merge(allSummary$failed, analysesMap, by='analysis')
   results2 <- reshapeResults(allResults)  # TODO consider doing this from the start
 

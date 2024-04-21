@@ -119,7 +119,6 @@ summarizeExperimentsDirectory <- function(dbs, experimentDir, workDir, metric) {
 summarizeSingleExperiment <- function(internalName, analysisName, experimentDir, externalName, workDir, metric) {
   
   res <- list(internal=NULL, estimation=NULL, hasRDS=F, hasSummary=F, success=F)
-  keyValues <- c(analysisName, internalName, externalName)
   if (internalName != externalName) {
     expName <- glue('{internalName}-Analysis_{analysisName}-{externalName}')
     rdsName <- file.path(workDir, experimentDir, glue('{expName}.rds'))
@@ -155,6 +154,7 @@ summarizeSingleExperiment <- function(internalName, analysisName, experimentDir,
           externalMetric <- as.numeric(r[external & metricIdx, 'value'])
           estimationMetric <- as.numeric(r[estimation & metricIdx, 'value'])
           
+          keyValues <- c(analysisName, internalName, externalName)
           res$internal <- c(keyValues, 'int', externalMetric, internalMetric)
           res$estimation <- c(keyValues, 'est', externalMetric, estimationMetric)
           
@@ -226,8 +226,8 @@ plotRawResults <- function(workDir, results, models, name, metric) {
   results %>%
     ggplot(aes(x=externalDatabase, y=value.ext, group=Experiment, color = Experiment)) +
     scale_x_discrete(
-      breaks = dbs,
-      labels = dbs
+      breaks = names(dbMap),
+      labels = names(dbMap)
     ) + theme_bw() + 
     scale_y_continuous() +  # limits = c(0.65, 0.8)
     xlab("External database") +
@@ -239,7 +239,10 @@ plotRawResults <- function(workDir, results, models, name, metric) {
       position = position_nudge(x = 0.25)) + # x  
     facet_grid(internalDatabase~analysisName) +
     # scale_color_brewer(palette = "Dark2") +
-    theme(legend.position = "bottom", axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+    theme(legend.position = "bottom", 
+          axis.text.x = element_text(angle = 45, vjust = 1, hjust=1) # ,
+          # plot.margin = margin(1,1,5,1.2, "cm")
+          )
 
   ggsave(file.path(workDir, glue('compare {name} {metric}.png')), width = 7, height = 7)
 }
@@ -259,7 +262,8 @@ plotFailedEstimations <- function(failedEstimations, models, name, metric) {
     ylab("Experiment") +
     geom_point(shape = 15, size=4) +
     facet_grid(internalDatabase~analysisName) +
-    theme(legend.position = "bottom", axis.text.x = element_text(angle = 45, vjust = 1, hjust=1),
+    theme(legend.position = "bottom", 
+          axis.text.x = element_text(angle = 45, vjust = 1, hjust=1),
           aspect.ratio = 1/3)
   
   ggsave(file.path(workDir, glue('success compare {name} {metric}.png')))
