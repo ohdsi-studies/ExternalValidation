@@ -262,9 +262,10 @@ plotFailedEstimations <- function(failedEstimations, models, name, metric) {
     ylab("Experiment") +
     geom_point(shape = 15, size=4) +
     facet_grid(internalDatabase~analysisName) +
-    theme(legend.position = "bottom", 
+    theme( legend.position = "none", 
           axis.text.x = element_text(angle = 45, vjust = 1, hjust=1),
-          aspect.ratio = 1/3)
+          aspect.ratio = 1/3,
+          strip.text.y.right = element_text(angle = 0))
   
   ggsave(file.path(workDir, glue('success compare {name} {metric}.png')))
 }

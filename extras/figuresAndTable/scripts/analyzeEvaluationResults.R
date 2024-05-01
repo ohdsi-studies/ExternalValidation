@@ -9,24 +9,24 @@ library(latex2exp)
 workDir <- 'C:/localdev/projects/robustness/rwe'
 
 experimentDirs <- list(
-  'full-match50' = 'full_model_agefix_match50_test',
+  'Full-medium' = 'full_model_agefix_match50_test',
   'Full' = 'full_model_agefix_test',
-  'full-top100' = 'full_model_agefix_top100_test',
-  'age-sex-match50' = 'Models_age_sex_agefix_match50_test',
+  'Full-top100' = 'full_model_agefix_top100_test',
+  'Age-Sex-medium' = 'Models_age_sex_agefix_match50_test',
   'Age-Sex' = 'Models_age_sex_agefix',
-  'age-sex-int-coef-n0' = 'Models_age_sex_int_agefix',
+  'Age-Sex-int' = 'Models_age_sex_int_agefix',
   'LR' = 'Models_lr_50_agefix_sig',
-  'lr50-non-na' = 'Models_lr_50_agefix',
-  'rf50' = 'Models_rf_50_agefix',
+  'LR-non-na' = 'Models_lr_50_agefix',
+  'RF' = 'Models_rf_50_agefix',
   'XGBoost' = 'Models_xgb_50_agefix'
 )
 
 comparisons <- list(
-  main = c('Age-Sex', 'LR', 'XGBoost','Full') # ,
-  # ageSex = c('Age-Sex', 'age-sex-match50', 'age-sex-int-coef-n0'),
-  # lr = c('LR', 'lr50-non-na'),
+  main = c('Age-Sex', 'LR', 'XGBoost','Full'),
+  ageSex = c('Age-Sex', 'Age-Sex-medium', 'Age-Sex-int'),
+  lr = c('LR', 'LR-non-na'),
   # forest = c('XGBoost', 'rf50'),
-  # fullModels = c('Full', 'full-match50', 'full-top100')
+  fullModels = c('Full', 'Full-medium', 'Full-top100')
 )
 
 dbs <- c('ccae', 'mdcd', 'mdcr', 'optum ses', 'optum ehr')
@@ -48,7 +48,7 @@ dbMap <- list(
 dbMap <- unlist(dbMap)
 
 
-for (metric in c('AUROC', 'brier score', 'calibration')) { 
+for (metric in c('AUROC')) {  # , 'brier score', 'calibration'
   
   allSummary <- summarizeAllExperiments(workDir, experimentDirs, dbs, metric)
   allResults <- merge(allSummary$results, analysesMap, by='analysis')
