@@ -57,6 +57,9 @@ for (metric in c('AUROC')) {  # , 'brier score', 'calibration'
   allResults$externalDatabase  <- names(dbMap)[match(allResults$externalDatabase, dbMap)]
   
   failedSummary <- merge(allSummary$failed, analysesMap, by='analysis')
+  failedSummary$internalDatabase  <- names(dbMap)[match(failedSummary$internalDatabase, dbMap)]
+  failedSummary$externalDatabase  <- names(dbMap)[match(failedSummary$externalDatabase, dbMap)]
+  
   results2 <- reshapeResults(allResults)  # TODO consider doing this from the start
 
   for (cname in names(comparisons)) {
