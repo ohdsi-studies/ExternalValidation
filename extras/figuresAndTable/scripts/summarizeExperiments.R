@@ -209,20 +209,20 @@ reshapeResults <- function(results) {
 
 #' Plot raw results
 #' 
-#' @param workDir path to working directory
 #' @param results a data frame with columns:
 #'   `Experiment`, `externalDatabase`, `value.ext`, `value.eval`, `type`
 #'    Where `type` is either int or est
 #' @param models a list of models
-#' @param name comparison name
 #' @param metric AUROC, brier score or calibration
 #' 
-plotRawResults <- function(workDir, results, models, name, metric) {
+plotRawResults <- function(results, models, metric) {
 
   results <- results[results[['Experiment']] %in% models, ]
   
   externalEvalIdx <- results[['externalDatabase']]!=results[['internalDatabase']]
 
+  ylabDict <- list(AUROC='AUROC', 'brier score'='Brier score', 'calibration'='Calibration')
+  
   results %>%
     ggplot(aes(x=externalDatabase, y=value.ext, group=Experiment, color = Experiment)) +
     scale_x_discrete(
@@ -231,7 +231,7 @@ plotRawResults <- function(workDir, results, models, name, metric) {
     ) + theme_bw() + 
     scale_y_continuous() +  # limits = c(0.65, 0.8)
     xlab("External database") +
-    ylab("External AUC") +
+    ylab(glue("External {ylabDict[metric]}")) +
     geom_point(shape = 5, size=1) +  # empty diamonds
     geom_point(data = results[results[['type']]=='int', ], shape = 18, size=2) +  # Filled diamonds
     geom_point(
@@ -243,35 +243,34 @@ plotRawResults <- function(workDir, results, models, name, metric) {
           axis.text.x = element_text(angle = 45, vjust = 1, hjust=1) # ,
           # plot.margin = margin(1,1,5,1.2, "cm")
           )
-
-  ggsave(file.path(workDir, glue('compare {name} {metric}.png')), width = 7, height = 7)
 }
 
 
-plotFailedEstimations <- function(failedEstimations, models, name, metric) {
+plotFailedEstimations <- function(failedEstimations, models, metric) {
   
   failedEstimations <- failedEstimations[failedEstimations[['Experiment']] %in% models, ]
   failedEstimations %>%
     ggplot(aes(x=externalDatabase, y=Experiment, group=Experiment, color = Experiment)) +
     scale_x_discrete(
-      breaks = dbs,
-      labels = dbs
+      breaks = names(dbMap),
+      labels = names(dbMap)
     ) + theme_bw() + 
     scale_y_discrete() +  # limits = c(0.65, 0.8)
     xlab("External database") +
-    ylab("Experiment") +
+    ylab(element_blank()) +
     geom_point(shape = 15, size=4) +
     facet_grid(internalDatabase~analysisName) +
-    theme( legend.position = "none", 
+    theme(legend.position = "bottom", 
           axis.text.x = element_text(angle = 45, vjust = 1, hjust=1),
+          axis.text.y=element_blank(),
+          axis.ticks.y=element_blank(),
           aspect.ratio = 1/3,
-          strip.text.y.right = element_text(angle = 0))
-  
-  ggsave(file.path(workDir, glue('success compare {name} {metric}.png')))
+          strip.text.y.right = element_text(angle = 0)
+          )
 }
 
 
-plotPerformenceDifference <- function(workDir, allResults, cname, metric)  {
+plotPerformenceDifference <- function(allResults, cname, metric)  {
   cResults <- allResults[allResults[['Experiment']] %in% comparisons[[cname]], ]
   
   externalEvalIdx <- cResults[['externalDatabase']]!=cResults[['internalDatabase']]
@@ -281,11 +280,11 @@ plotPerformenceDifference <- function(workDir, allResults, cname, metric)  {
   
   ylabDict <- list(AUROC='AUROC', 'brier score'='Brier', 'calibration'='Calibration')
   
-  cResults %>%
-    ggplot(aes(x=type, y=Difference, group=type, color = type)) +
+  diffPlot <-
+    ggplot(cResults, aes(x=type, y=Difference, group=type, color = type)) +
     scale_x_discrete(
       breaks = c('int', 'est'),
-      labels = c('Internal', 'Reweighting')
+      labels = c('Internal', 'Reweight')
     ) + theme_bw() + 
     scale_y_continuous() +  # limits = c(0.65, 0.8)
     xlab('Estimation type') +
@@ -296,19 +295,18 @@ plotPerformenceDifference <- function(workDir, allResults, cname, metric)  {
       aspect.ratio = 2/(1+sqrt(5)),
       legend.position = "none") # axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)
   # scale_color_brewer(palette = "Dark2")
-  fileName <- file.path(workDir, glue('{metric} {cname} difference.png'))
-  cat('Saving', fileName, '\n')
-  ggsave(fileName, width = 7, height = 1.5)
   
-  pStats <- ddply(
-    cResults, .(type, internalDatabase), summarise, med = median(Difference), 
-    q25 = quantile(Difference, 0.25),
-    q75 = quantile(Difference, 0.75))
-  cat(cname, metric, '\n')
-  if (metric == 'AUROC') {
-    pStats[ , c('med', 'q25', 'q75')] <- round(pStats[ , c('med', 'q25', 'q75')], 3)
-    print(pStats)
+  if (F) {
+    pStats <- ddply(
+      cResults, .(type, internalDatabase), summarise, med = median(Difference), 
+      q25 = quantile(Difference, 0.25),
+      q75 = quantile(Difference, 0.75))
+    if (metric == 'AUROC') {
+      pStats[ , c('med', 'q25', 'q75')] <- round(pStats[ , c('med', 'q25', 'q75')], 3)
+      print(pStats)
+    }
+    else
+      print(pStats)
   }
-  else
-    print(pStats)
+  return(diffPlot)
 }
