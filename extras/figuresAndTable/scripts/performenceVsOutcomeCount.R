@@ -6,8 +6,11 @@ source('./summarizeExperiments.R')
 source('./analysisDefinitions.R')
 library(glue)
 library(plyr)
+library(latex2exp)
 
-metric <- 'AUROC'
+metric <- 'AUROC' # calibration 'brier score', 'AUROC'
+
+ylabDict <- list(AUROC='AUROC', 'brier score'='Brier score', 'calibration'='Calibration')
 
 #### Get the table summary ####
 
@@ -19,10 +22,10 @@ results2 <- reshapeResults(allResults)  # TODO consider doing this from the star
 
 #### Outcome counts ####
 
-experimentDir <- experimentDirs[['LR']]
+experimentDir <- experimentDirs[['LR-medium']]
 
 outcomeCounts <- data.frame(matrix(nrow = 25, ncol=3))
-colnames(outcomeCounts) <- c('internalDatabase', 'analysis', 'n.outcome')
+colnames(outcomeCounts) <- c('database', 'analysis', 'n.outcome')
 i <- 0
 for (analysisId in 1:5) {
   for (internalDB in names(dbMap)) {
@@ -41,19 +44,80 @@ for (analysisId in 1:5) {
   }
 }
 
+outcomeCounts$n.outcome <- as.numeric(outcomeCounts$n.outcome)
+outcomeCounts$Outcome.size.category = cut(
+  outcomeCounts$n.outcome,
+  # breaks = c(500,  1000,  2000,  5000, 10000,  20000,  50000),
+  breaks = c(100 ,1000, 10000, 100000),
+  right = FALSE,
+  include.lowest = TRUE,
+  dig.lab = 6)
+
 write.csv(outcomeCounts, file.path(workDir, 'outcomeCounts.csv'))
 
-results3 <- merge(results2, outcomeCounts, by = c('internalDatabase', 'analysis'))
-models <- c('Age-Sex', 'LR', 'XGBoost','Full')
-results3 <- results3[results3$type=='est' & results3$Experiment %in% models, ]
-results3$n.outcome <- as.integer(results3$n.outcome)
+for (mode in c('internal', 'external')) {
+  results3 <- merge(
+    results2, outcomeCounts, 
+    by.x = c(glue('{mode}Database'), 'analysis'),
+    by.y = c('database', 'analysis')
+    )
+  models <- c('LR-Age-Sex', 'LR-medium', 'XGBoost-medium','LR-large')
+  results3 <- results3[results3$type=='est' & results3$Experiment %in% models, ]
+  results3$n.outcome <- as.integer(results3$n.outcome)
+  
+  results3$err <- abs(results3$value.ext - results3$value.eval)
+  
+  ggplot(results3, aes(x=n.outcome, y=err, group=Experiment, color=Experiment)) +
+    geom_point() +
+    scale_x_log10() +
+    ylab(TeX(glue("|$\\Delta$ {ylabDict[metric]}|"))) + # 
+    xlab(glue('{mode} outcome counts'))
+  ggsave(file.path(workDir, glue('{metric} err vs {mode} outcome counts point.png')))
+  
+  ggplot(results3, aes(x=n.outcome, y=err, group=n.outcome)) +
+    geom_boxplot() +
+    scale_x_log10() +
+    ylab(TeX(glue("|$\\Delta$ {ylabDict[metric]}|"))) + # 
+    xlab(glue('{mode} outcome counts'))
+  ggsave(file.path(workDir, glue('{metric} err vs {mode} outcome counts box.png')))
+  
+  # Fixed outcome and external DB meaning that n is a function of internal DB
+  ggplot(results3, aes(x=n.outcome, y=err, group = Experiment, color = Experiment)) +
+    geom_line() +
+    geom_point() +
+    scale_x_log10() +
+    facet_grid(cols = vars(analysisName), rows = vars(externalDatabase)) +
+    ylab(TeX(glue("|$\\Delta$ {ylabDict[metric]}|"))) + # 
+    xlab(glue('{mode} outcome counts'))
+  ggsave(file.path(workDir, glue('{metric} err vs {mode} outcome counts lines outcome-external.png')))
+  
+  
+  # Fixed internal DB and external DB meaning that n is a function of outcome
+  ggplot(results3, aes(x=n.outcome, y=err, group = Experiment, color = Experiment)) +
+    geom_line() +
+    geom_point() +
+    scale_x_log10() +
+    facet_grid(cols = vars(internalDatabase), rows = vars(externalDatabase)) +
+    ylab(TeX(glue("|$\\Delta$ {ylabDict[metric]}|"))) + # 
+    xlab(glue('{mode} outcome counts'))
+  ggsave(file.path(workDir, glue('{metric} err vs {mode} outcome counts lines internal-external.png')))
+  
+  # Fixed external DB meaning that n is a function of outcome and internal DB
+  ggplot(results3, aes(x=n.outcome, y=err, group = Experiment, color = Experiment)) +
+    geom_line() +
+    geom_point() +
+    scale_x_log10() +
+    facet_wrap(vars(externalDatabase), nrow = 1) +
+    ylab(TeX(glue("|$\\Delta$ {ylabDict[metric]}|"))) + # 
+    xlab(glue('{mode} outcome counts'))
+  ggsave(file.path(workDir, glue('{metric} err vs {mode} outcome counts lines external.png')))
+  
 
-results3$err <- abs(results3$value.ext - results3$value.eval)
-
-ggplot(results3, aes(x=n.outcome, y=err, group=Experiment, color=Experiment)) +
-  geom_point() +
-  scale_x_log10()
-
-ggplot(results3, aes(x=n.outcome, y=err, group=n.outcome)) +
-  geom_boxplot() +
-  scale_x_log10()
+  ggplot(results3, aes(x=Outcome.size.category, y=err, fill =Experiment)) +
+    geom_boxplot() +
+    ylab(TeX(glue("|$\\Delta$ {ylabDict[metric]}|"))) + # 
+    xlab(glue('{mode} outcome counts'))
+  ggsave(file.path(workDir, glue('{metric} err vs {mode} outcome counts categories.png')))
+  
+    
+}

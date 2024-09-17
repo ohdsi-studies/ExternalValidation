@@ -2,19 +2,19 @@ workDir <- 'C:/localdev/projects/robustness/rwe'
 
 experimentDirs <- list(
   'Full-medium' = 'full_model_agefix_match50_test',
-  'Full' = 'full_model_agefix_test',
+  'LR-large' = 'full_model_agefix_test',
   'Full-top100' = 'full_model_agefix_top100_test',
   'Age-Sex-medium' = 'Models_age_sex_agefix_match50_test',
-  'Age-Sex' = 'Models_age_sex_agefix',
+  'LR-Age-Sex' = 'Models_age_sex_agefix',
   'Age-Sex-int' = 'Models_age_sex_int_agefix',
-  'LR' = 'Models_lr_50_agefix_sig',
+  'LR-medium' = 'Models_lr_50_agefix_sig',
   'LR-non-na' = 'Models_lr_50_agefix',
   'RF' = 'Models_rf_50_agefix',
-  'XGBoost' = 'Models_xgb_50_agefix'
+  'XGBoost-medium' = 'Models_xgb_50_agefix'
 )
 
 comparisons <- list(
-  main = c('Age-Sex', 'LR', 'XGBoost','Full'),
+  main = c('LR-Age-Sex', 'LR-medium', 'XGBoost-medium','LR-large'),
   ageSex = c('Age-Sex', 'Age-Sex-medium', 'Age-Sex-int'),
   lr = c('LR', 'LR-non-na'),
   fullModels = c('Full', 'Full-medium', 'Full-top100')
