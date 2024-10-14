@@ -39,10 +39,11 @@ for (metric in metrics) {
   
 ggarrange(
   diffPlots$AUROC, #  + rremove("xlab") 
+  diffPlots$calibration,
   diffPlots$`brier score`, #  + rremove("xlab") 
-  diffPlots$calibration, 
-  labels = c("a)", "b)", "c)"),
-  ncol = 1, nrow = 3,
+  diffPlots$`Brier skill score`,
+  labels = c("a)", "b)", "c)", "d)"),
+  ncol = 1, nrow = 4,
   align = 'v') + 
   theme(axis.line=element_blank(),
         axis.text.x=element_blank(),
@@ -57,5 +58,5 @@ ggarrange(
         plot.background=element_rect(fill = "White", colour = "White"),
         plot.margin=unit(c(0,0,0,0), "cm"),
         panel.spacing=unit(c(0,0,0,0), "cm"))
-ggsave(file.path(workDir, 'Figure 4 performance differences.png'), width = 7, height = 5.5, dpi = 300)
+ggsave(file.path(workDir, 'Figure 4 performance differences.png'), width = 7, height = 8, dpi = 300)
 

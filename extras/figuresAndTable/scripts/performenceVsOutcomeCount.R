@@ -8,7 +8,7 @@ library(glue)
 library(plyr)
 library(latex2exp)
 
-metric <- 'AUROC' # calibration 'brier score', 'AUROC'
+metric <- 'AUROC' # 'calibration' 'brier score', 'AUROC'
 
 ylabDict <- list(AUROC='AUROC', 'brier score'='Brier score', 'calibration'='Calibration')
 
@@ -22,7 +22,8 @@ results2 <- reshapeResults(allResults)  # TODO consider doing this from the star
 
 #### Outcome counts ####
 
-experimentDir <- experimentDirs[['LR-medium']]
+cfgName <- 'LR-medium'
+experimentDir <- experimentDirs[[cfgName]]
 
 outcomeCounts <- data.frame(matrix(nrow = 25, ncol=3))
 colnames(outcomeCounts) <- c('database', 'analysis', 'n.outcome')
@@ -61,7 +62,7 @@ for (mode in c('internal', 'external')) {
     by.x = c(glue('{mode}Database'), 'analysis'),
     by.y = c('database', 'analysis')
     )
-  models <- c('LR-Age-Sex', 'LR-medium', 'XGBoost-medium','LR-large')
+  models <- c('LR-Age-Sex', 'LR-medium', 'XGBoost-medium','LR-large', 'Full-medium', 'Full-top100')
   results3 <- results3[results3$type=='est' & results3$Experiment %in% models, ]
   results3$n.outcome <- as.integer(results3$n.outcome)
   
@@ -80,38 +81,39 @@ for (mode in c('internal', 'external')) {
     ylab(TeX(glue("|$\\Delta$ {ylabDict[metric]}|"))) + # 
     xlab(glue('{mode} outcome counts'))
   ggsave(file.path(workDir, glue('{metric} err vs {mode} outcome counts box.png')))
-  
-  # Fixed outcome and external DB meaning that n is a function of internal DB
-  ggplot(results3, aes(x=n.outcome, y=err, group = Experiment, color = Experiment)) +
-    geom_line() +
-    geom_point() +
-    scale_x_log10() +
-    facet_grid(cols = vars(analysisName), rows = vars(externalDatabase)) +
-    ylab(TeX(glue("|$\\Delta$ {ylabDict[metric]}|"))) + # 
-    xlab(glue('{mode} outcome counts'))
-  ggsave(file.path(workDir, glue('{metric} err vs {mode} outcome counts lines outcome-external.png')))
-  
-  
-  # Fixed internal DB and external DB meaning that n is a function of outcome
-  ggplot(results3, aes(x=n.outcome, y=err, group = Experiment, color = Experiment)) +
-    geom_line() +
-    geom_point() +
-    scale_x_log10() +
-    facet_grid(cols = vars(internalDatabase), rows = vars(externalDatabase)) +
-    ylab(TeX(glue("|$\\Delta$ {ylabDict[metric]}|"))) + # 
-    xlab(glue('{mode} outcome counts'))
-  ggsave(file.path(workDir, glue('{metric} err vs {mode} outcome counts lines internal-external.png')))
-  
-  # Fixed external DB meaning that n is a function of outcome and internal DB
-  ggplot(results3, aes(x=n.outcome, y=err, group = Experiment, color = Experiment)) +
-    geom_line() +
-    geom_point() +
-    scale_x_log10() +
-    facet_wrap(vars(externalDatabase), nrow = 1) +
-    ylab(TeX(glue("|$\\Delta$ {ylabDict[metric]}|"))) + # 
-    xlab(glue('{mode} outcome counts'))
-  ggsave(file.path(workDir, glue('{metric} err vs {mode} outcome counts lines external.png')))
-  
+
+  if (F) {  
+    # Fixed outcome and external DB meaning that n is a function of internal DB
+    ggplot(results3, aes(x=n.outcome, y=err, group = Experiment, color = Experiment)) +
+      geom_line() +
+      geom_point() +
+      scale_x_log10() +
+      facet_grid(cols = vars(analysisName), rows = vars(externalDatabase)) +
+      ylab(TeX(glue("|$\\Delta$ {ylabDict[metric]}|"))) + # 
+      xlab(glue('{mode} outcome counts'))
+    ggsave(file.path(workDir, glue('{metric} err vs {mode} outcome counts lines outcome-external.png')))
+    
+    
+    # Fixed internal DB and external DB meaning that n is a function of outcome
+    ggplot(results3, aes(x=n.outcome, y=err, group = Experiment, color = Experiment)) +
+      geom_line() +
+      geom_point() +
+      scale_x_log10() +
+      facet_grid(cols = vars(internalDatabase), rows = vars(externalDatabase)) +
+      ylab(TeX(glue("|$\\Delta$ {ylabDict[metric]}|"))) + # 
+      xlab(glue('{mode} outcome counts'))
+    ggsave(file.path(workDir, glue('{metric} err vs {mode} outcome counts lines internal-external.png')))
+    
+    # Fixed external DB meaning that n is a function of outcome and internal DB
+    ggplot(results3, aes(x=n.outcome, y=err, group = Experiment, color = Experiment)) +
+      geom_line() +
+      geom_point() +
+      scale_x_log10() +
+      facet_wrap(vars(externalDatabase), nrow = 1) +
+      ylab(TeX(glue("|$\\Delta$ {ylabDict[metric]}|"))) + # 
+      xlab(glue('{mode} outcome counts'))
+    ggsave(file.path(workDir, glue('{metric} err vs {mode} outcome counts lines external.png')))
+  }
 
   ggplot(results3, aes(x=Outcome.size.category, y=err, fill =Experiment)) +
     geom_boxplot() +

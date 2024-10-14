@@ -3,6 +3,12 @@ library(dplyr)
 library(ggplot2)
 library(stringr)
 
+ylabDict <- list(
+  AUROC='AUROC',
+  'calibration'='Calibration',
+  'brier score'='Brier score', 
+  'Brier skill score'='Brier skill score')
+
 #' Summarize all experiments
 #' 
 #' Read all results from experiment directories and summarize
@@ -32,7 +38,7 @@ summarizeAllExperiments <- function(workDir, experimentDirs, dbs, metric) {
     nSuccess <- sum(summary$success[ ,'success'])
     nLarge <- sum(summary$success[ , 'large.opt.err'])
     nOut <- sum(summary$success[ ,'out.of.range'])
-    cat('n rows', nrow(summary$success), 'n success', nSuccess, '\n')
+    # cat('n rows', nrow(summary$success), 'n success', nSuccess, '\n')
     allSummary[experimentDirs[[name]], ] <- c(name, nrow(summary$success), nSuccess, nLarge, nOut)
     
     g <- summary$success[, c('analysis', 'success', 'large.opt.err', 'out.of.range')] %>% 
@@ -141,10 +147,23 @@ summarizeSingleExperiment <- function(internalName, analysisName, experimentDir,
             rcols <- c("type", "targetId", "outcomeId", "internalDatabase", "externalDatabase", "analysis")
             r <- merge(r1, r2, by = rcols)
             r[['metric']] <- 'calibration'
-            r[['value']] <- abs(r[['value.x']] - r[['value.y']])
+            r[['value']] <- r[['value.x']] / r[['value.y']]
           }
           
-          # TODO - check consistensy 
+          if (metric == 'Brier skill score') {
+            brierScorelIdx <- r$metric == 'brier score'
+            observedRiskIdx <- r$metric == "calibrationInLarge observed risk"
+            rBrier <- r[brierScorelIdx, ]
+            rObserved <- r[observedRiskIdx, ]
+            rcols <- c("type", "targetId", "outcomeId", "internalDatabase", "externalDatabase", "analysis")
+            r <- merge(rBrier, rObserved, by = rcols)
+            r$metric <- metric
+            # r$value <- 1 - r[['value.x']]/(r[['value.y']]*(1-r[['value.y']]))
+            r$value <- getBrierSkillScore(r[['value.x']], r[['value.y']])            
+          }
+          
+          
+          # TODO - check consistency 
           internal <- r[['type']] == 'internal'
           external <- r[['type']] == 'external'
           estimation <- r[['type']] == 'estimation'
@@ -221,8 +240,6 @@ plotRawResults <- function(results, models, metric) {
   
   externalEvalIdx <- results[['externalDatabase']]!=results[['internalDatabase']]
 
-  ylabDict <- list(AUROC='AUROC', 'brier score'='Brier score', 'calibration'='Calibration')
-  
   results %>%
     ggplot(aes(x=externalDatabase, y=value.ext, group=Experiment, color = Experiment)) +
     scale_x_discrete(
@@ -231,7 +248,7 @@ plotRawResults <- function(results, models, metric) {
     ) + theme_bw() + 
     scale_y_continuous() +  # limits = c(0.65, 0.8)
     xlab("External database") +
-    ylab(glue("External {ylabDict[metric]}")) +
+    ylab(glue("External {ylabDict[[metric]]}")) +
     geom_point(shape = 5, size=1) +  # empty diamonds
     geom_point(data = results[results[['type']]=='int', ], shape = 18, size=2) +  # Filled diamonds
     geom_point(
@@ -276,9 +293,13 @@ plotPerformenceDifference <- function(allResults, cname, metric)  {
   externalEvalIdx <- cResults[['externalDatabase']]!=cResults[['internalDatabase']]
   cResults <- cResults[externalEvalIdx, ]
   
-  cResults[['Difference']] <- abs(cResults[['value.eval']] - cResults[['value.ext']])
+  cResults$Difference <- abs(cResults[['value.eval']] - cResults[['value.ext']])
   
-  ylabDict <- list(AUROC='AUROC', 'brier score'='Brier', 'calibration'='Calibration')
+  probeQuantiles <- c(0.25, 0.5, 0.75, 0.90, 0.95)
+  internalAbsDiff <- quantile(cResults$Difference[cResults$type=='int'], probeQuantiles, na.rm=T)
+  estimatedAbsDiff <- quantile(cResults$Difference[cResults$type=='est'], probeQuantiles, na.rm=T)
+  absDiffQuantiles <- rbind(internalAbsDiff, estimatedAbsDiff)
+  print(round(absDiffQuantiles, 5))
   
   diffPlot <-
     ggplot(cResults, aes(x=type, y=Difference, group=type, color = type)) +
@@ -288,11 +309,11 @@ plotPerformenceDifference <- function(allResults, cname, metric)  {
     ) + theme_bw() + 
     scale_y_continuous() +  # limits = c(0.65, 0.8)
     xlab('Estimation type') +
-    ylab(TeX(glue("|$\\Delta$ {ylabDict[metric]}|"))) + # 
+    ylab(TeX(glue("|$\\Delta$ {ylabDict[[metric]]}|"))) + # 
     geom_boxplot() +
     facet_grid(~internalDatabase) +
     theme(
-      aspect.ratio = 2/(1+sqrt(5)),
+      aspect.ratio = 1, # 2/(1+sqrt(5)),
       legend.position = "none") # axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)
   # scale_color_brewer(palette = "Dark2")
   
@@ -309,4 +330,19 @@ plotPerformenceDifference <- function(allResults, cname, metric)  {
       print(pStats)
   }
   return(diffPlot)
+}
+
+
+#' get Brier skill score
+#'
+#' Brier skill score = 1 - BS/BR where BS is brier score and BR is the reference score  
+#'  
+#' @param brierScore brier score
+#' @param observedRisk observed risk
+#' 
+#' @return Brier skill score
+#' 
+getBrierSkillScore <- function(brierScore, observedRisk) {
+  refBrierScore <- observedRisk*(1-observedRisk)  # mean of (y_i-risk)^2 where risk = mean of y_i
+  return(1 - brierScore/refBrierScore)
 }

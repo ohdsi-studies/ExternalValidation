@@ -20,12 +20,33 @@ experimentDirs <- list(
   'XGBoost' = 'Models_xgb_50_agefix'
 )
 
-internalName <- 'ccae'
-externalName <- 'optum ses'
-analysisName <- 1
+internalName <- 'optum ses'
+externalName <- 'ccae'
+analysisName <- 4
 experimentDir <- experimentDirs[['LR']]
+
+# Start running
 
 expName <- glue('{internalName}-Analysis_{analysisName}-{externalName}')
 rdsName <- file.path(workDir, experimentDir, glue('{expName}.rds'))
+
 est <- readRDS(rdsName)
-  
+
+observedRiskIdx <- est$summary$metric == 'calibrationInLarge observed risk'
+externalIdx <- est$summary$type == 'external'
+brierScorelIdx <- est$summary$metric == 'brier score'
+
+extObservedRisk <- as.numeric(est$summary[observedRiskIdx & externalIdx, 'value'])
+extBrierScore <- as.numeric(est$summary[brierScorelIdx & externalIdx, 'value'])
+extBrierSkillScore <- getBrierSkillScore(extBrierScore, extObservedRisk)
+
+internalIdx <- est$summary$type == 'internal'
+intObservedRisk <- as.numeric(est$summary[observedRiskIdx & internalIdx, 'value'])
+intBrierScore <- as.numeric(est$summary[brierScorelIdx & internalIdx, 'value'])
+intBrierSkillScore <- getBrierSkillScore(intBrierScore, intObservedRisk)
+
+estimationIdx <- est$summary$type == 'estimation'
+estObservedRisk <- as.numeric(est$summary[observedRiskIdx & estimationIdx, 'value'])
+estBrierScore <- as.numeric(est$summary[brierScorelIdx & estimationIdx, 'value'])
+estBrierSkillScore <- getBrierSkillScore(estBrierScore, estObservedRisk)
+

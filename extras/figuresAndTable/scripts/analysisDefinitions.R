@@ -14,10 +14,10 @@ experimentDirs <- list(
 )
 
 comparisons <- list(
-  main = c('LR-Age-Sex', 'LR-medium', 'XGBoost-medium','LR-large'),
-  ageSex = c('Age-Sex', 'Age-Sex-medium', 'Age-Sex-int'),
-  lr = c('LR', 'LR-non-na'),
-  fullModels = c('Full', 'Full-medium', 'Full-top100')
+  main = c('LR-Age-Sex', 'LR-medium', 'XGBoost-medium','LR-large') #,
+  # ageSex = c('Age-Sex', 'Age-Sex-medium', 'Age-Sex-int'),
+  # lr = c('LR', 'LR-non-na'),
+  # fullModels = c('Full', 'Full-medium', 'Full-top100')
 )
 
 dbs <- c('ccae', 'mdcd', 'mdcr', 'optum ses', 'optum ehr')
@@ -40,4 +40,9 @@ dbMap <- unlist(dbMap)
 
 
 
-metrics <- c('AUROC', 'brier score', 'calibration')
+metrics <- c(
+  'AUROC', 
+  'calibration',
+  'brier score', 
+  'Brier skill score'
+  )
