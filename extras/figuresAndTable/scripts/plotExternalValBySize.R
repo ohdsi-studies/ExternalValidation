@@ -34,7 +34,7 @@ getScaledBrierResults <- function(data) {
     data[, c(keyCols, 'type', 'metric','value')] %>%
       filter(.data$metric == 'brier score'),
     data[, c(keyCols, 'type', 'metric','value')] %>%
-      filter(.data$metric == 'calibrationInLarge observed risk'),
+      filter(.data$metric == 'calibrationInLarge mean prediction'),
     by = c(keyCols, 'type')
   )
   calibrationResults$metric <- 'Scaled brier score'

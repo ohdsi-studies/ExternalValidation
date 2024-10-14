@@ -147,7 +147,7 @@ summarizeSingleExperiment <- function(internalName, analysisName, experimentDir,
           
           if (metric == 'Scaled brier score') {
             brierScorelIdx <- r$metric == 'brier score'
-            observedRiskIdx <- r$metric == "calibrationInLarge observed risk"
+            observedRiskIdx <- r$metric == "calibrationInLarge mean prediction"
             rBrier <- r[brierScorelIdx, ]
             rObserved <- r[observedRiskIdx, ]
             rcols <- c("type", "targetId", "outcomeId", "internalDatabase", "externalDatabase", "analysis")
@@ -337,7 +337,7 @@ plotPerformenceDifference <- function(allResults, cname, metric)  {
 #' 
 #' @return Scaled brier score
 #' 
-getScaledBrierScore <- function(brierScore, observedRisk) {
-  refBrierScore <- observedRisk*(1-observedRisk)  # mean of (y_i-risk)^2 where risk = mean of y_i
+getScaledBrierScore <- function(brierScore, predictedRisk) {
+  refBrierScore <- predictedRisk*(1-predictedRisk)  # mean of (y_i-risk)^2 where risk = mean of y_i
   return(1 - brierScore/refBrierScore)
 }
