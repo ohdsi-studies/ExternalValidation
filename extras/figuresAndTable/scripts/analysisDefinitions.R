@@ -38,11 +38,10 @@ dbMap <- list(
 )
 dbMap <- unlist(dbMap)
 
+ylabDict <- list(
+  AUROC='AUROC',
+  'calibration'='Calibration',
+  'brier score'='Brier score', 
+  'Brier skill score'='Brier skill score')
 
-
-metrics <- c(
-  'AUROC', 
-  'calibration',
-  'brier score', 
-  'Brier skill score'
-  )
+metrics <- names(ylabDict)

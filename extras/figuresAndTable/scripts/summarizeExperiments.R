@@ -3,11 +3,6 @@ library(dplyr)
 library(ggplot2)
 library(stringr)
 
-ylabDict <- list(
-  AUROC='AUROC',
-  'calibration'='Calibration',
-  'brier score'='Brier score', 
-  'Brier skill score'='Brier skill score')
 
 #' Summarize all experiments
 #' 

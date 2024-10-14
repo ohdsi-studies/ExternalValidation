@@ -1,5 +1,8 @@
 rm(list=ls())
 
+script_dir <- dirname(rstudioapi::getSourceEditorContext()$path)
+setwd(script_dir)
+source('./analysisDefinitions.R')
 library(dplyr)
 library(ggplot2)
 library(glue)
@@ -86,7 +89,7 @@ arrangeByMetricDiff <- function(data, samplingtype) {
     diffs[[n]] <- getDiffResults(results[[n]], testType = testType)
     diffs[[n]]$samplingType <- factor(
       samplingtype, levels = c('Internal data sampling', 'External data sampling'))
-    diffs[[n]]$metric <- n
+    diffs[[n]]$metric <- factor(n, levels = ylabDict)
   }
   
   r <- diffs[[1]]
