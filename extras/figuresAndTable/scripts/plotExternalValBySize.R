@@ -29,7 +29,7 @@ getCalibrationResults <- function(data) {
 }
 
 
-getBrierSkillResults <- function(data) {
+getScaledBrierResults <- function(data) {
   calibrationResults <- merge(
     data[, c(keyCols, 'type', 'metric','value')] %>%
       filter(.data$metric == 'brier score'),
@@ -37,7 +37,7 @@ getBrierSkillResults <- function(data) {
       filter(.data$metric == 'calibrationInLarge observed risk'),
     by = c(keyCols, 'type')
   )
-  calibrationResults$metric <- 'Brier skill score'
+  calibrationResults$metric <- 'Scaled brier score'
   pHat <- calibrationResults$value.y
   calibrationResults$value = 1 - calibrationResults$value.x / (pHat*(1-pHat))
   return(calibrationResults[ , c(keyCols, 'type', 'metric', 'value')])
@@ -77,7 +77,7 @@ arrangeByMetricDiff <- function(data, samplingtype) {
   results$`AUROC` <- data %>% filter(.data$metric == 'AUROC')
   results$`Calibration` <- getCalibrationResults(data)
   results$`Brier score` <- data %>% filter(.data$metric == 'brier score')
-  results$`Brier skill score` <- getBrierSkillResults(data)
+  results$`Scaled brier score` <- getScaledBrierResults(data)
   
   if (samplingtype == 'External data sampling')
     testType <- 'Validation'

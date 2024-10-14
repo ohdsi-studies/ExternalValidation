@@ -41,7 +41,7 @@ ggarrange(
   diffPlots$AUROC, #  + rremove("xlab") 
   diffPlots$calibration,
   diffPlots$`brier score`, #  + rremove("xlab") 
-  diffPlots$`Brier skill score`,
+  diffPlots$`Scaled brier score`,
   labels = c("a)", "b)", "c)", "d)"),
   ncol = 1, nrow = 4,
   align = 'v') + 
