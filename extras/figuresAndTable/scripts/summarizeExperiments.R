@@ -312,18 +312,17 @@ plotPerformenceDifference <- function(allResults, cname, metric)  {
       legend.position = "none") # axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)
   # scale_color_brewer(palette = "Dark2")
   
-  if (F) {
-    pStats <- ddply(
-      cResults, .(type, internalDatabase), summarise, med = median(Difference), 
-      q25 = quantile(Difference, 0.25),
-      q75 = quantile(Difference, 0.75))
-    if (metric == 'AUROC') {
-      pStats[ , c('med', 'q25', 'q75')] <- round(pStats[ , c('med', 'q25', 'q75')], 3)
-      print(pStats)
-    }
-    else
-      print(pStats)
+  pStats <- ddply(
+    cResults, .(type, internalDatabase), summarise, med = median(Difference), 
+    q25 = quantile(Difference, 0.25),
+    q75 = quantile(Difference, 0.75))
+  if (metric == 'AUROC') {
+    pStats[ , c('med', 'q25', 'q75')] <- round(pStats[ , c('med', 'q25', 'q75')], 3)
+    print(pStats)
   }
+  else
+    print(pStats)
+    
   return(diffPlot)
 }
 

@@ -6,7 +6,7 @@ source('./analysisDefinitions.R')
 library(dplyr)
 library(ggplot2)
 library(glue)
-library(plyr)
+# library(plyr)
 library(latex2exp)
 library(ggpubr)
 library(patchwork)
@@ -104,8 +104,17 @@ interanlSamplingDiffs <- arrangeByMetricDiff(interanlSamplingData, 'Internal dat
 
 samplingDiffs <- rbind(interanlSamplingDiffs, exteranlSamplingDiffs)
 
+rCounts <- samplingDiffs %>%
+  filter(metric=='AUROC') %>%
+  group_by(samplingType, sample) %>%
+  dplyr::summarise(n=n()) %>%
+  as.data.frame()
+print(rCounts)
+
+samplingDiffsFiltered <- samplingDiffs %>% filter(!(samplingType == 'Internal data sampling' & sample==1000) )
+
 ggplot(
-  data = samplingDiffs,
+  data = samplingDiffsFiltered,
   aes(x = sample, y = abs(diff))) +
   geom_boxplot(fill = 'royalblue3') +
   facet_grid(metric ~ samplingType, scales = 'free_y') +

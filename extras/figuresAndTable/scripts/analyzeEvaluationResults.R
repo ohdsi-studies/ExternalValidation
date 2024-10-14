@@ -59,4 +59,3 @@ ggarrange(
         plot.margin=unit(c(0,0,0,0), "cm"),
         panel.spacing=unit(c(0,0,0,0), "cm"))
 ggsave(file.path(workDir, 'Figure 4 performance differences.png'), width = 7, height = 8, dpi = 300)
-
