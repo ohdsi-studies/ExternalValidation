@@ -254,7 +254,8 @@ plotRawResults <- function(results, models, metric) {
     theme(legend.position = "bottom", 
           axis.text.x = element_text(angle = 45, vjust = 1, hjust=1) # ,
           # plot.margin = margin(1,1,5,1.2, "cm")
-          )
+          ) +
+    labs(color = "Modeling configuration") 
 }
 
 
