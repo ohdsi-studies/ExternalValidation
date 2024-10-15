@@ -42,6 +42,6 @@ ylabDict <- list(
   AUROC='AUROC',
   'calibration'='Calibration',
   'brier score'='Brier score', 
-  'Scaled brier score'='Scaled brier score')
+  'Scaled Brier score'='Scaled Brier score')
 
 metrics <- names(ylabDict)

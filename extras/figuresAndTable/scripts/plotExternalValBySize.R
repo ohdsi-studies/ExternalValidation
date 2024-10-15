@@ -37,7 +37,7 @@ getScaledBrierResults <- function(data) {
       filter(.data$metric == 'calibrationInLarge mean prediction'),
     by = c(keyCols, 'type')
   )
-  calibrationResults$metric <- 'Scaled brier score'
+  calibrationResults$metric <- 'Scaled Brier score'
   pHat <- calibrationResults$value.y
   calibrationResults$value = 1 - calibrationResults$value.x / (pHat*(1-pHat))
   return(calibrationResults[ , c(keyCols, 'type', 'metric', 'value')])
@@ -77,7 +77,7 @@ arrangeByMetricDiff <- function(data, samplingtype) {
   results$`AUROC` <- data %>% filter(.data$metric == 'AUROC')
   results$`Calibration` <- getCalibrationResults(data)
   results$`Brier score` <- data %>% filter(.data$metric == 'brier score')
-  results$`Scaled brier score` <- getScaledBrierResults(data)
+  results$`Scaled Brier score` <- getScaledBrierResults(data)
   
   if (samplingtype == 'External data sampling')
     testType <- 'Validation'

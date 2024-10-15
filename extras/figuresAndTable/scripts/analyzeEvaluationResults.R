@@ -41,7 +41,7 @@ ggarrange(
   diffPlots$AUROC, #  + rremove("xlab") 
   diffPlots$calibration,
   diffPlots$`brier score`, #  + rremove("xlab") 
-  diffPlots$`Scaled brier score`,
+  diffPlots$`Scaled Brier score`,
   labels = c("a)", "b)", "c)", "d)"),
   ncol = 1, nrow = 4,
   align = 'v') + 
@@ -58,4 +58,4 @@ ggarrange(
         plot.background=element_rect(fill = "White", colour = "White"),
         plot.margin=unit(c(0,0,0,0), "cm"),
         panel.spacing=unit(c(0,0,0,0), "cm"))
-ggsave(file.path(workDir, 'Figure 4 performance differences.png'), width = 7, height = 8, dpi = 300)
+ggsave(file.path(workDir, 'Figure 4 performance differences.png'), width = 7, height = 8.5, dpi = 300)

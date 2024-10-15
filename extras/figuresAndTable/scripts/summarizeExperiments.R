@@ -145,7 +145,7 @@ summarizeSingleExperiment <- function(internalName, analysisName, experimentDir,
             r[['value']] <- r[['value.x']] / r[['value.y']]
           }
           
-          if (metric == 'Scaled brier score') {
+          if (metric == 'Scaled Brier score') {
             brierScorelIdx <- r$metric == 'brier score'
             observedRiskIdx <- r$metric == "calibrationInLarge mean prediction"
             rBrier <- r[brierScorelIdx, ]
@@ -309,7 +309,7 @@ plotPerformenceDifference <- function(allResults, cname, metric)  {
     geom_boxplot() +
     facet_grid(~internalDatabase) +
     theme(
-      aspect.ratio = 1, # 2/(1+sqrt(5)),
+      aspect.ratio = 1.1, # 2/(1+sqrt(5)),
       legend.position = "none") # axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)
   # scale_color_brewer(palette = "Dark2")
   
