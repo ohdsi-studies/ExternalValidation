@@ -232,6 +232,7 @@ reshapeResults <- function(results) {
 plotRawResults <- function(results, models, metric) {
 
   results <- results[results[['Experiment']] %in% models, ]
+  results[['Experiment']] <- factor(results[['Experiment']], levels = models)
   
   externalEvalIdx <- results[['externalDatabase']]!=results[['internalDatabase']]
 

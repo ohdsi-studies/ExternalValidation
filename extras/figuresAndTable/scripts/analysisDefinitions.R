@@ -1,23 +1,24 @@
 workDir <- 'C:/local/projects/robustness/rwe'
 
 experimentDirs <- list(
-  'Full-medium' = 'full_model_agefix_match50_test',
   'LR-large' = 'full_model_agefix_test',
-  'Full-top100' = 'full_model_agefix_top100_test',
-  'Age-Sex-medium' = 'Models_age_sex_agefix_match50_test',
-  'LR-Age-Sex' = 'Models_age_sex_agefix',
-  'Age-Sex-int' = 'Models_age_sex_int_agefix',
+  'LR-large-est-medium' = 'full_model_agefix_match50_test',
+  'LR-large-est-top100' = 'full_model_agefix_top100_test',
+  'LR-small-est-medium' = 'Models_age_sex_agefix_match50_test',
+  'LR-small' = 'Models_age_sex_agefix',
+  'LR-small-est-interactions' = 'Models_age_sex_int_agefix',
   'LR-medium' = 'Models_lr_50_agefix_sig',
-  'LR-non-na' = 'Models_lr_50_agefix',
-  'RF' = 'Models_rf_50_agefix',
+  'LR-medium-est-non-na' = 'Models_lr_50_agefix',
+  'RF-medium' = 'Models_rf_50_agefix',
   'XGBoost-medium' = 'Models_xgb_50_agefix'
 )
 
 comparisons <- list(
-  main = c('LR-Age-Sex', 'LR-medium', 'XGBoost-medium','LR-large'),
-  ageSex = c('Age-Sex', 'Age-Sex-medium', 'Age-Sex-int'),
-  lr = c('LR', 'LR-non-na'),
-  fullModels = c('Full', 'Full-medium', 'Full-top100')
+  main = c('LR-small', 'LR-large', 'LR-medium', 'XGBoost-medium'),
+  lrSmall = c('LR-small', 'LR-small-est-interactions', 'LR-small-est-medium'),
+  lrMedium = c('LR-medium', 'LR-medium-est-non-na'),
+  lrLarge = c('LR-large', 'LR-large-est-medium', 'LR-large-est-top100'),
+  nonLinear = c('XGBoost-medium', 'RF-medium')
 )
 
 dbs <- c('ccae', 'mdcd', 'mdcr', 'optum ses', 'optum ehr')

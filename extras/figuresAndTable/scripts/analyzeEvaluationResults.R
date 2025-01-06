@@ -36,7 +36,6 @@ for (metric in metrics) {
 }
 
 diffPlots$`Scaled Brier score` <- diffPlots$`Scaled Brier score` + 
-  # theme(axis.title.x = element_text()) + 
   xlab('Estimation type')
 
 # bgcolor("White") +
