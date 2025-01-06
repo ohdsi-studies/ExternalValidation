@@ -242,7 +242,7 @@ plotRawResults <- function(results, models, metric) {
       labels = names(dbMap)
     ) + theme_bw() + 
     scale_y_continuous() +  # limits = c(0.65, 0.8)
-    xlab("External database") +
+    xlab("External data source") +
     ylab(glue("External {ylabDict[[metric]]}")) +
     geom_point(shape = 5, size=1) +  # empty diamonds
     geom_point(data = results[results[['type']]=='int', ], shape = 18, size=2) +  # Filled diamonds
@@ -269,7 +269,7 @@ plotFailedEstimations <- function(failedEstimations, models, metric) {
       labels = names(dbMap)
     ) + theme_bw() + 
     scale_y_discrete() +  # limits = c(0.65, 0.8)
-    xlab("External database") +
+    xlab("External data source") +
     ylab(element_blank()) +
     geom_point(shape = 15, size=4) +
     facet_grid(internalDatabase~analysisName) +
@@ -302,13 +302,15 @@ plotPerformenceDifference <- function(allResults, cname, metric)  {
     scale_x_discrete(
       breaks = c('int', 'est'),
       labels = c('Internal', 'Reweight')
-    ) + theme_bw() + 
+    ) + 
+    theme_bw() + 
     scale_y_continuous() +  # limits = c(0.65, 0.8)
-    xlab('Estimation type') +
+    xlab('') +
     ylab(TeX(glue("|$\\Delta$ {ylabDict[[metric]]}|"))) + # 
     geom_boxplot() +
     facet_grid(~internalDatabase) +
     theme(
+      # axis.title.x=element_blank(),
       aspect.ratio = 1.1, # 2/(1+sqrt(5)),
       legend.position = "none") # axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)
   # scale_color_brewer(palette = "Dark2")

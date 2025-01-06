@@ -35,6 +35,10 @@ for (metric in metrics) {
   }
 }
 
+diffPlots$`Scaled Brier score` <- diffPlots$`Scaled Brier score` + 
+  # theme(axis.title.x = element_text()) + 
+  xlab('Estimation type')
+
 # bgcolor("White") +
   
 ggarrange(
@@ -49,7 +53,7 @@ ggarrange(
         axis.text.x=element_blank(),
         axis.text.y=element_blank(),
         axis.ticks=element_blank(),
-        axis.title.x=element_blank(),
+        # axis.title.x=element_blank(),
         axis.title.y=element_blank(),
         panel.background=element_rect(fill = "White", colour = "White"),
         panel.border=element_blank(),

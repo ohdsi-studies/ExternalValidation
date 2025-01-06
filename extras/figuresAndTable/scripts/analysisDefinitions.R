@@ -1,4 +1,4 @@
-workDir <- 'C:/localdev/projects/robustness/rwe'
+workDir <- 'C:/local/projects/robustness/rwe'
 
 experimentDirs <- list(
   'Full-medium' = 'full_model_agefix_match50_test',
@@ -14,10 +14,10 @@ experimentDirs <- list(
 )
 
 comparisons <- list(
-  main = c('LR-Age-Sex', 'LR-medium', 'XGBoost-medium','LR-large') #,
-  # ageSex = c('Age-Sex', 'Age-Sex-medium', 'Age-Sex-int'),
-  # lr = c('LR', 'LR-non-na'),
-  # fullModels = c('Full', 'Full-medium', 'Full-top100')
+  main = c('LR-Age-Sex', 'LR-medium', 'XGBoost-medium','LR-large'),
+  ageSex = c('Age-Sex', 'Age-Sex-medium', 'Age-Sex-int'),
+  lr = c('LR', 'LR-non-na'),
+  fullModels = c('Full', 'Full-medium', 'Full-top100')
 )
 
 dbs <- c('ccae', 'mdcd', 'mdcr', 'optum ses', 'optum ehr')
