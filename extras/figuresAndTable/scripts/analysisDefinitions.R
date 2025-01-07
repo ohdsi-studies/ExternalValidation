@@ -8,7 +8,7 @@ experimentDirs <- list(
   'LR-small' = 'Models_age_sex_agefix',
   'LR-small-est-interactions' = 'Models_age_sex_int_agefix',
   'LR-medium' = 'Models_lr_50_agefix_sig',
-  'LR-medium-est-non-na' = 'Models_lr_50_agefix',
+  'LR-medium-est-non-zero' = 'Models_lr_50_agefix',
   'RF-medium' = 'Models_rf_50_agefix',
   'XGBoost-medium' = 'Models_xgb_50_agefix'
 )
@@ -16,7 +16,7 @@ experimentDirs <- list(
 comparisons <- list(
   main = c('LR-small', 'LR-large', 'LR-medium', 'XGBoost-medium'),
   lrSmall = c('LR-small', 'LR-small-est-interactions', 'LR-small-est-medium'),
-  lrMedium = c('LR-medium', 'LR-medium-est-non-na'),
+  lrMedium = c('LR-medium', 'LR-medium-est-non-zero'),
   lrLarge = c('LR-large', 'LR-large-est-medium', 'LR-large-est-top100'),
   nonLinear = c('XGBoost-medium', 'RF-medium')
 )
